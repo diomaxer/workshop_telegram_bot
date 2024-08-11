@@ -1,0 +1,22 @@
+version: '3.10'
+services:
+  api:
+    container_name: workshop-telegram-bot
+
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+
+    volumes:
+      - ${SRC_VOLUME_PATH}:/usr/src/app/src
+
+    restart: always
+
+    command: [
+      "poetry", "run", "python", "launcher.py"
+    ]
+
+networks:
+  default:
+    name: ${DOCKER_NETWORK_NAME}
+    external: true
