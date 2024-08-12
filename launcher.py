@@ -13,6 +13,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, FSInputFile, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 from aiogram import types
+from app.internal.repository.sqliet_repository import get_picture_by_type
 
 settings = dotenv_values()
 
@@ -41,9 +42,10 @@ async def button1_handler(message: types.Message):
         "Любовь": "love",
         "Юмор": "humour",
     }
+
     folder_path = Path(f'src/pictures/memes/{memes[message.text]}/')
-    files = list(folder_path.glob('*.*'))
-    start_picture = FSInputFile(secrets.choice(files))
+    picture_name = await get_picture_by_type(picture_type=memes[message.text])
+    start_picture = FSInputFile(path=folder_path / picture_name[1])
     await bot.send_photo(
         chat_id=message.chat.id,
         photo=start_picture,
