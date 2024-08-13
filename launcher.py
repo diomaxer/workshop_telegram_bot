@@ -40,7 +40,7 @@ async def button1_handler(message: types.Message):
         "Психология": "psychology",
         "Любовь": "love",
         "Юмор": "humour",
-        "Животные": "animals",
+        "Паппилэнд": "animals",
     }
     folder_path = Path(f'src/pictures/memes/{memes[message.text]}/')
     files = list(folder_path.glob('*.*'))
@@ -72,7 +72,7 @@ async def command_start_handler(message: Message) -> None:
     builder.row(
         KeyboardButton(text="Любовь"),
         KeyboardButton(text="Юмор"),
-        KeyboardButton(text="Животные"),
+        KeyboardButton(text="Паппилэнд"),
     )
     builder.row(
         KeyboardButton(text="Начало"),
