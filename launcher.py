@@ -32,7 +32,7 @@ welcome_text = f""", рады знакомству 🙏\n
 
 @dp.message(
     lambda message: message.text in (
-        "Мотивация", "Психология", "Любовь", "Юмор"
+        "Мотивация", "Психология", "Любовь", "Юмор", "Паппилэнд"
     )
 )
 async def button1_handler(message: types.Message):
@@ -41,6 +41,7 @@ async def button1_handler(message: types.Message):
         "Психология": "psychology",
         "Любовь": "love",
         "Юмор": "humour",
+        "Паппилэнд": "animals",
     }
 
     folder_path = Path(f'src/pictures/memes/{memes[message.text]}/')
@@ -73,6 +74,7 @@ async def command_start_handler(message: Message) -> None:
     builder.row(
         KeyboardButton(text="Любовь"),
         KeyboardButton(text="Юмор"),
+        KeyboardButton(text="Паппилэнд"),
     )
     builder.row(
         KeyboardButton(text="Начало"),
