@@ -50,7 +50,7 @@ class UpdatePictureStatusWorker:
         while True:
             try:
                 if await self.check_day():
-                    print("Start new day!")
+                    print(f"Start new day! {datetime.now().strftime('%Y-%m-%d')}")
                     await self.update_picture_status()
                 await asyncio.sleep(60)
             except Exception as ex:
