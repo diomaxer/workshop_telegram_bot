@@ -40,9 +40,8 @@ async def create_pictures(pictures: List[models.Picture]):
 async def get_picture_by_type(picture_type: str):
     async with aiosqlite.connect(SQLITE_URL) as db:
         query = """
-            select id, name from pictures
-                where type = ? and is_active = false and last_used is null
-            order by updated_at, name
+            select id, min(name) from pictures 
+                where type = ? and is_active = false
             limit 1;
         """
         async with db.execute(query, (picture_type,)) as cursor:
