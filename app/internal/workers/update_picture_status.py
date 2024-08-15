@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
 
-from app.internal.repository.sqliet_repository import (
+from app.internal.repository.sqlite.pictures import (
     get_today_pictures,
     update_pictures_to_yesterday,
     update_all_type_pictures_to_inactive,
