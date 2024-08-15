@@ -4,7 +4,7 @@ from typing import List
 
 from dotenv import dotenv_values
 
-from app.internal.repository.sqliet_repository import create_database, create_pictures
+from app.internal.repository.sqlite.pictures import create_pictures
 from app.pkg import models
 
 settings = dotenv_values()
@@ -30,8 +30,6 @@ class AddPictureWorker:
 
     async def run(self):
         print("Start Add Picture Worker!")
-        print("Create pictures database.")
-        await create_database()
         while True:
             try:
                 print("Reading pictures folders.")

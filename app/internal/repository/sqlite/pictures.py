@@ -10,7 +10,7 @@ settings = dotenv_values()
 SQLITE_URL = settings.get("SQLITE_URL")
 
 
-async def create_database():
+async def create_pictures_table():
     async with aiosqlite.connect(SQLITE_URL) as db:
         await db.execute("""
             create table if not exists pictures(
