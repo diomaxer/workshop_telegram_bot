@@ -1,15 +1,17 @@
 from pathlib import Path
-from dotenv import dotenv_values
 
-from aiogram import Bot, Dispatcher, html
-from aiogram.utils.markdown import hlink
+from aiogram import Bot, Dispatcher, html, types
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message, FSInputFile, KeyboardButton
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-from aiogram import types
-from app.internal.repository.sqliet_repository import get_picture_by_type
+from aiogram.utils.markdown import hlink
+from dotenv import dotenv_values
+
+from app.internal.repository.sqlite.pictures import get_picture_by_type
+from app.internal.repository.sqlite.users import create_user
+from app.pkg import models
 
 settings = dotenv_values()
 
@@ -18,6 +20,8 @@ bot = Bot(
     token=settings.get("BOT_API_TOKEN"),
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
+
+SRC_VOLUME_PATH = settings.get("SRC_VOLUME_PATH")
 
 
 welcome_text = f""", рады знакомству 🙏\n
@@ -42,7 +46,6 @@ async def button1_handler(message: types.Message):
         "Юмор": "humour",
         "Паппилэнд": "animals",
     }
-
     folder_path = Path(f'src/pictures/memes/{memes[message.text]}/')
     picture_name = await get_picture_by_type(picture_type=memes[message.text])
     start_picture = FSInputFile(path=folder_path / picture_name[1])
@@ -59,12 +62,7 @@ async def start_button_handler(message: types.Message):
     await command_start_handler(message=message)
 
 
-@dp.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    """
-    This handler receives messages with `/start` command
-    """
-    start_picture = FSInputFile("src/pictures/project/start.png")
+async def build_keyboard() -> ReplyKeyboardBuilder:
     builder = ReplyKeyboardBuilder()
     builder.row(
         KeyboardButton(text="Мотивация"),
@@ -78,9 +76,32 @@ async def command_start_handler(message: Message) -> None:
     builder.row(
         KeyboardButton(text="Начало"),
     )
+    return builder
+
+
+async def record_user(message: types.Message):
+    try:
+        user = models.User(
+            chat_id=message.chat.id,
+            name=message.from_user.full_name,
+            is_active=True
+        )
+        await create_user(user=user)
+    except Exception as ex:
+        print(ex)
+
+
+@dp.message(CommandStart())
+async def command_start_handler(message: Message) -> None:
+    """
+    This handler receives messages with `/start` command
+    """
+    await record_user(message=message)
+
+    builder = await build_keyboard()
     await bot.send_photo(
         chat_id=message.chat.id,
-        photo=start_picture,
+        photo=FSInputFile(f"{SRC_VOLUME_PATH}/pictures/project/start.png"),
         caption=html.bold(message.from_user.full_name) + welcome_text,
         reply_markup=builder.as_markup(
             resize_keyboard=True
