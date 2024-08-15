@@ -19,12 +19,12 @@ async def run():
     print("Launch Telegram Workshop BOT!")
     add_picture_worker = AddPictureWorker()
     update_picture_status_worker = UpdatePictureStatusWorker()
-    main_worker = MailingWorker()
+    mailing_worker = MailingWorker()
     await asyncio.gather(
         dp.start_polling(bot),
         add_picture_worker.run(),
         update_picture_status_worker.run(),
-        main_worker.run()
+        mailing_worker.run()
     )
 
 
