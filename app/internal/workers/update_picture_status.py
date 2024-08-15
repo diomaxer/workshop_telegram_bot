@@ -13,13 +13,13 @@ class UpdatePictureStatusWorker:
     def __init__(self):
         self.current_day = self.count_day()
 
-    async def count_day(self):
+    def count_day(self):
         now = datetime.now().timestamp()
         return int(now // (60 * 60 * 24))
 
     async def check_day(self):
-        day = await self.count_day()
-        if await self.current_day < day:
+        day = self.count_day()
+        if self.current_day < day:
             self.current_day = day
             return True
         return False
@@ -46,13 +46,14 @@ class UpdatePictureStatusWorker:
             )
 
     async def run(self):
-        await asyncio.sleep(9.8)
+        await asyncio.sleep(3)
         while True:
             try:
+                print("Check new day!")
                 if await self.check_day():
                     print(f"Start new day! {datetime.now().strftime('%Y-%m-%d')}")
                     await self.update_picture_status()
-                await asyncio.sleep(60)
+                await asyncio.sleep(10)
             except Exception as ex:
                 print(ex)
                 await asyncio.sleep(60)
