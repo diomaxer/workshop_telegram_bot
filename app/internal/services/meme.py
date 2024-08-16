@@ -32,6 +32,8 @@ welcome_text = f""", рады знакомству 🙏\n
 Погнали! 💭\n
 """
 
+picture_text = f"""Выбирай другую тему или возвращайся завтра за новой порцией настроения 💫"""
+
 
 @dp.message(
     lambda message: message.text in (
@@ -52,6 +54,7 @@ async def button1_handler(message: types.Message):
     await bot.send_photo(
         chat_id=message.chat.id,
         photo=start_picture,
+        caption=picture_text
     )
 
 
